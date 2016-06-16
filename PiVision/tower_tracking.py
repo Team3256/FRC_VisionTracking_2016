@@ -55,7 +55,7 @@ def main():
     #cap.set(15, constants.CAM_EXPOSURE)
     logging.basicConfig(level=logging.DEBUG)
 
-    NetworkTable.setIPAddress('10.32.56.2')
+    NetworkTable.setIPAddress('10.32.56.18')
     NetworkTable.setClientMode()
     NetworkTable.initialize()
 
@@ -72,7 +72,7 @@ def main():
         #Threshold the HSV image to only get the green color.
         mask = cv2.inRange(hsv, lower_green, upper_green)
         #Gets contours of the thresholded image.
-        _,contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         #Draw the contours around detected object
         cv2.drawContours(frame, contours, -1, (0,0,255), 3)
 
@@ -95,7 +95,7 @@ def main():
                 cv2.putText(frame, "Angle: "+str(angle),constants.TEXT_COORDINATE_4, font, 0.7, (0,0,255), 2)
                 nt.putNumber('CameraAngle', angle)
                 cv2.putText(frame, "Turn "+direction, constants.TEXT_COORDINATE_5, font, 0.7, (0,0,255), 2)
-                if direction == right:
+                if direction == "right":
                     nt.putNumber('Direction', 0)
                 else:
                     nt.putNumber('Direction', 1)
