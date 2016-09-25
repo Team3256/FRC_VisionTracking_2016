@@ -64,6 +64,7 @@ def main():
     while cap.isOpened():
 
         _,frame=cap.read()
+        #converts bgr vals of image to hsv
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         #Range for green light reflected off of the tape. Need to tune.
         lower_green = np.array(constants.LOWER_GREEN, dtype=np.uint8)
