@@ -8,6 +8,7 @@ import logging
 import socket
 import pickle
 import struct
+import datetime as dt
 
 def get_center(contour):
     #get moments data from contour
@@ -54,8 +55,17 @@ def main():
     #cap.set(15, constants.CAM_EXPOSURE)
     logging.basicConfig(level=logging.DEBUG)
 
+    now = dt.datetime.now()
+    date = str(now.day)
+    hour = str(now.hour)
+    minu = str(now.minute)
+
     fourcc = cv2.cv.CV_FOURCC(*'XVID')
-    out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640,480))
+
+    output = "output" + date + "_" + hour + "_" + minu + ".avi"
+    print output
+
+    out = cv2.VideoWriter(output, fourcc, 20.0, (640,480))
 
     while cap.isOpened():
 	
