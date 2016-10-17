@@ -46,8 +46,8 @@ def get_offset_angle(center_x, center_y):
     return (degrees, direction)
 
 def main():
+    #cap = cv2.VideoCapture('output16_21_27.avi')
     cap = cv2.VideoCapture(0)
-
     #Set camera values
     cap.set(3, constants.CAM_WIDTH)
     cap.set(4, constants.CAM_HEIGHT)
@@ -65,7 +65,7 @@ def main():
     output = "output" + date + "_" + hour + "_" + minu + ".avi"
     print output
 
-    out = cv2.VideoWriter(output, fourcc, 20.0, (640,480))
+    out = cv2.VideoWriter(output, fourcc, 60.0, (640,480))
 
     while cap.isOpened():
 	
