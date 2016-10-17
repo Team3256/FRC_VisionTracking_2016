@@ -54,10 +54,15 @@ def main():
     #cap.set(15, constants.CAM_EXPOSURE)
     logging.basicConfig(level=logging.DEBUG)
 
-    while cap.isOpened():
+    fourcc = cv2.cv.CV_FOURCC(*'XVID')
+    out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640,480))
 
-        #_,frame=cap.read()
-	frame = cv2.imread('Goal.png')
+    while cap.isOpened():
+	
+        ret,frame=cap.read()
+	frame = cv2.flip(frame,0)
+	out.write(frame)
+	#frame = cv2.imread('Goal.png')
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         #Range for green light reflected off of the tape. Need to tune.
         lower_green = np.array(constants.LOWER_GREEN, dtype=np.uint8)
@@ -68,15 +73,31 @@ def main():
         #Gets contours of the thresholded image.
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         #Draw the contours around detected object
-        cv2.drawContours(frame, contours, -1, (0,0,255), 3)
+        #cv2.drawContours(frame, contours, -1, (0,0,255), 3)
 
         #Get centroid of tracked object.
         #Check to see if contours were found.
         if len(contours)>0:
             #find largest contour
-            cnt = max(contours, key=cv2.contourArea)
+            #cnt = max(contours, key=cv2.contourArea)
             #get center
-            center = get_center(cnt)
+	    maxSize = -1
+	    bestMatch = max(contours, key=cv2.contourArea)
+	    for cnt in contours:
+		#if cv2.isContourConvex(cnt):
+		#	continue;
+		#if cv2.contourArea(cnt)<10000:
+	#		continue;
+		cv2.drawContours(frame, cnt, -1, (0,0,255), 3)
+		#if maxSize<cv2.contourArea(cnt):
+		#	bestMatch=cnt
+		#	maxSize=cv2.contourArea(cnt)
+		center = get_center(bestMatch)
+		#cv2.putText(frame,str(cv2.isContourConvex(cnt)), center, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
+	    ##cv2.drawContours(frame, contours, -1, (0,0,255), 3)
+	    #cv2.approxPolyDP(cnt,500,True)
+            #center = get_center(cnt)
+	    #cv2.putText(frame,str(cv2.isContourConvex(cnt)), center, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
             cv2.circle(frame, center, 3, (0,0,255), 2)
             if(center[0] != 0 and center[1]!=0):
                 center_str_x = "x = "+str(center[0])
@@ -100,6 +121,8 @@ def main():
             break
 
     cv2.destroyAllWindows()
+    out.release()
+    cap.release()
 
 if __name__ == '__main__':
     #runs main
