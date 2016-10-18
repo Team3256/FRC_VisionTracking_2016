@@ -4,7 +4,7 @@ import math
 #This is the constants file that has allo f the important constants for the Tower Tracker.
 
 #Camera Constants
-CAM_EXPOSURE = 0.01
+CAM_EXPOSURE = 0.0001
 CAM_BRIGHTNESS = 0.05
 #CAM_EXPOSURE=0.3
 #CAM_BRIGHTNESS=0.6
