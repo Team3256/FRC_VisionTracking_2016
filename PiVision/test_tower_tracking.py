@@ -63,14 +63,14 @@ def main():
     fourcc = cv2.cv.CV_FOURCC(*'XVID')
 
     output = "output" + date + "_" + hour + "_" + minu + ".avi"
+    filter_output = "filter_output" + date + "_" + hour + "_" + minu + ".avi"
     print output
 
     out = cv2.VideoWriter(output, fourcc, 60.0, (640,480))
-
+    filter_out = cv2.VideoWriter(filter_output,fourcc,60.60,(640,480))
     while cap.isOpened():
 	
         ret,frame=cap.read()
-	frame = cv2.flip(frame,0)
 	out.write(frame)
 	#frame = cv2.imread('Goal.png')
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -80,6 +80,7 @@ def main():
 
         #Threshold the HSV image to only get the green color.
         mask = cv2.inRange(hsv, lower_green, upper_green)
+        filter_out.write(hsv);
         #Gets contours of the thresholded image.
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         #Draw the contours around detected object
@@ -132,6 +133,7 @@ def main():
 
     cv2.destroyAllWindows()
     out.release()
+    filter_out.release()
     cap.release()
 
 if __name__ == '__main__':
