@@ -8,7 +8,6 @@ import logging
 import socket
 import pickle
 import struct
-import datetime as dt
 
 def get_center(contour):
     #get moments data from contour
@@ -46,32 +45,17 @@ def get_offset_angle(center_x, center_y):
     return (degrees, direction)
 
 def main():
-    #cap = cv2.VideoCapture('output16_21_27.avi')
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture('output21_20_22.avi')
+    #cap = cv2.VideoCapture(1)
     #Set camera values
     cap.set(3, constants.CAM_WIDTH)
     cap.set(4, constants.CAM_HEIGHT)
     cap.set(10, constants.CAM_BRIGHTNESS)
     #cap.set(15, constants.CAM_EXPOSURE)
     logging.basicConfig(level=logging.DEBUG)
-
-    now = dt.datetime.now()
-    date = str(now.day)
-    hour = str(now.hour)
-    minu = str(now.minute)
-
-    fourcc = cv2.cv.CV_FOURCC(*'XVID')
-
-    output = "output" + date + "_" + hour + "_" + minu + ".avi"
-    filter_output = "filter_output" + date + "_" + hour + "_" + minu + ".avi"
-    print output
-
-    out = cv2.VideoWriter(output, fourcc, 60.0, (640,480))
-    filter_out = cv2.VideoWriter(filter_output,fourcc,60.60,(640,480))
     while cap.isOpened():
 	
         ret,frame=cap.read()
-	out.write(frame)
 	#frame = cv2.imread('Goal.png')
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         #Range for green light reflected off of the tape. Need to tune.
@@ -80,7 +64,6 @@ def main():
 
         #Threshold the HSV image to only get the green color.
         mask = cv2.inRange(hsv, lower_green, upper_green)
-        filter_out.write(hsv);
         #Gets contours of the thresholded image.
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         #Draw the contours around detected object
@@ -90,20 +73,20 @@ def main():
         #Check to see if contours were found.
         if len(contours)>0:
             #find largest contour
-            #cnt = max(contours, key=cv2.contourArea)
+            cnt = max(contours, key=cv2.contourArea)
             #get center
-	    maxSize = -1
-	    bestMatch = max(contours, key=cv2.contourArea)
-	    for cnt in contours:
+	    #maxSize = -1
+	    #bestMatch = max(contours, key=cv2.contourArea)
+	    #for cnt in contours:
 		#if cv2.isContourConvex(cnt):
 		#	continue;
 		#if cv2.contourArea(cnt)<10000:
 	#		continue;
-		cv2.drawContours(frame, cnt, -1, (0,0,255), 3)
+	    cv2.drawContours(frame, cnt, -1, (0,0,255), 3)
 		#if maxSize<cv2.contourArea(cnt):
 		#	bestMatch=cnt
 		#	maxSize=cv2.contourArea(cnt)
-		center = get_center(bestMatch)
+ 	    center = get_center(cnt)
 		#cv2.putText(frame,str(cv2.isContourConvex(cnt)), center, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
 	    ##cv2.drawContours(frame, contours, -1, (0,0,255), 3)
 	    #cv2.approxPolyDP(cnt,500,True)
@@ -127,7 +110,7 @@ def main():
         cv2.imshow('HSV', hsv)
         
         #close if delay in camera feed is too long
-        k = cv2.waitKey(1) & 0xFF
+        k = cv2.waitKey(30) & 0xFF
         if k == 27:
             break
 
