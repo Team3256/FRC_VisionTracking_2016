@@ -46,8 +46,8 @@ def get_offset_angle(center_x, center_y):
     return (degrees, direction)
 
 def main():
-    #cap = cv2.VideoCapture('output16_21_27.avi')
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture('output21_20_22.avi')
+    #cap = cv2.VideoCapture(1)
     #Set camera values
     cap.set(3, constants.CAM_WIDTH)
     cap.set(4, constants.CAM_HEIGHT)

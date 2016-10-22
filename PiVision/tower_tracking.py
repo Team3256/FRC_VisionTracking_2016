@@ -55,7 +55,7 @@ def main():
     #cap.set(15, constants.CAM_EXPOSURE)
     logging.basicConfig(level=logging.DEBUG)
 
-    NetworkTable.setIPAddress('10.32.56.18')
+    NetworkTable.setIPAddress('10.32.56.20')
     NetworkTable.setClientMode()
     NetworkTable.initialize()
 
@@ -101,9 +101,9 @@ def main():
                     nt.putNumber('Direction', 1)
 
         #show image
-        cv2.imshow('frame',frame)
-        cv2.imshow('mask', mask)
-        cv2.imshow('HSV', hsv)
+        #cv2.imshow('frame',frame)
+        #cv2.imshow('mask', mask)
+        #cv2.imshow('HSV', hsv)
 
         #close if delay in camera feed is too long
         k = cv2.waitKey(1) & 0xFF
